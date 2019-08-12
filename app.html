@@ -42,6 +42,8 @@
         FHIR.oauth2.ready(function (fhirClient) {
             myApp.smart = fhirClient;
             getAllFHIR()
+            getMAMFHIR()
+            getPatientName()
           }, function(){ alert("error") })
     }
 
@@ -57,30 +59,21 @@
     }
 
     function getMAMFHIR(){
-          myMAM.smart.patient.api.fetchAll({type: "Age",query:{"category":"age"}})// in this case, it makes little sense to use the fetch all context, because I'm looking for specific things like patient age
-          myMam.smart.patient.api.search({type: gender, query: queryObject})//trying to find the patient gender 
+          $.when( 
+              myApp.smart.patient.api.fetchAll({type: "Patient.birthDate", query:{"category":"Patient"}}) 
+            ).then(function (data) {
+              render(data)// this render function is purely vanity, displays text on screen
+            }, function(error){ console.log(error) })
     }
+    
     function getPatientName(pt) {
-            if (pt.name) {
-                var names = pt.name.map(function(name) {
-                    return name.given.join(" ") + " " + name.family.join(" ");
-                });
-                return names.join(" / ");
-            } else {
-                return "anonymous";
-            }
+      $.when( 
+              myApp.smart.patient.api.fetchAll({type: "Patient.name", query:{"category":"Patient"}}) 
+            ).then(function (data) {
+              render(data)// this render function is purely vanity, displays text on screen
+            }, function(error){ console.log(error) })
         }
-    function getPatientAge(){
-
-    }
-    function getSymptoms(){
-
-    }
-    function getHistory(){// this may include breast cancer, radiation, and braca
-
-    }
-    function getProcedure
-  myMAM.getPatientName
+  
     function render(data){
       
       console.log(data)
