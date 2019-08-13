@@ -7,8 +7,6 @@
     <script src="js/underscore.js"></script>
     <script src="js/fhir-client.js"></script>
 
-    <script src="node_modules/fhirclient/fhir-client.js"></script>
-
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css">
 
@@ -29,7 +27,6 @@
   <script>
 
     var myApp = {}
-    var myMAM = {}
 
 
     $(document).ready(function(){
@@ -42,8 +39,7 @@
         FHIR.oauth2.ready(function (fhirClient) {
             myApp.smart = fhirClient;
             getAllFHIR()
-            getMAMFHIR()
-            getPatientName()
+            onReady()
           }, function(){ alert("error") })
     }
 
@@ -54,26 +50,11 @@
            $.when( 
               myApp.smart.patient.api.fetchAll({type: "Condition", query:{"category":"diagnosis"}}) 
             ).then(function (data) {
-              render(data)// this render function is purely vanity, displays text on screen
+              render(data)
             }, function(error){ console.log(error) })
     }
 
-    function getMAMFHIR(){
-          $.when( 
-              myApp.smart.patient.api.fetchAll({type: "Patient.birthDate", query:{"category":"Patient"}}) 
-            ).then(function (data) {
-              render(data)// this render function is purely vanity, displays text on screen
-            }, function(error){ console.log(error) })
-    }
-    
-    function getPatientName(pt) {
-      $.when( 
-              myApp.smart.patient.api.fetchAll({type: "Patient.name", query:{"category":"Patient"}}) 
-            ).then(function (data) {
-              render(data)// this render function is purely vanity, displays text on screen
-            }, function(error){ console.log(error) })
-        }
-  
+
     function render(data){
       
       console.log(data)
